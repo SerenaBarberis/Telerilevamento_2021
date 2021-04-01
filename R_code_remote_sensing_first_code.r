@@ -120,6 +120,31 @@ plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="hist") #individua tutte le differe
 install.packages('RStoolbox')
 library(RStoolbox)
 
+# importiamo 1988 image, quindi p224r63_1988_masked, per avere un confronto con l'immagine satellitare del 2011
+p224r63_1988 <- brick("p224r63_1988_masked.grd")
+p224r63_1988
+plot(p224r63_1988) #visualizza le singole bande (le stesse dell'immagine del 2011)
+#visualizziamo l'immagine con l'RGB 
+plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
+#per vedere l'immagiine con l'infrarosso vicino (NIR)
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
+
+#plot in RGB con l'immagine del 1988 e 2011
+par(mfrow=c(2,1))
+plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
+
+#plot 2x2 con 2 immagini in NIR con stretch lineare e 2 con histogram strech (utile ad esempio per studi di geologia,petrografia, per rilevare meglio la granulometria, che anch'essa influenza la riflettanza)
+pdf('multitemp.pdf')
+par(mfrow=c(2,2))
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="hist")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="hist")
+dev.off()
+
+
+
 
 
 
