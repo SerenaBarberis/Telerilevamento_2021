@@ -27,11 +27,24 @@ plot(sunc$map)
 sunc <-unsuperClass(sun, nClasses=20)
 plot(sunc$map)
 
+#Gran Canyon 
+#https://earthobservatory.nasa.gov/images/80948/exploring-the-grand-canyon
+#When John Wesley Powell led an expedition down the Colorado River and through the Grand Canyon in 1869, he was confronted with a daunting landscape. At its highest point, the serpentine gorge plunged 1,829 meters (6,000 feet) from rim to river bottom, making it one of the deepest canyons in the United States. In just 6 million years, water had carved through rock layers that collectively represented more than 2 billion years of geological history, nearly half of the time Earth has existed.
 
+setwd('C:/Users/Sery/Desktop/lab')
+library(raster)
+library(RStoolbox)
 
+#il file è in RGB, quindi si utilizza la funzione brick
+gc <- brick('dolansprings_oli_2013088_canyon_lrg.jpg')
+plotRGB(gc, r=1, g=2, b=3, stretc='lin')
+plotRGB(gc, r=1, g=2, b=3, stretc='hist') #strech ancora più alto dei valori, in modo da visualizzare più variazioni di colore possibili (tutte le gamme delle bande RGB)
 
-
-
-
-
-
+#classificazione dell'immagine: si misura la distanza di ogni pixel da un valore multispettrale e si raggruppano a seconda della distanza minore dal valore
+#funzione unsuperClass (all interno del pacchetto RStoolbox): classifica i pixel dell'immagine in base alla classe che scegliamo 
+#facciamo un modello dell'immagine, quindi avremo la mappa e le informazioni delle classi, per visualizzare solo la mappa nel plot bisogna legarla con $
+gcc2 <- unsuperClass(gc, nClasses=2)
+plot(gcc2$map)
+# con 4 classi
+gcc4 <- unsuperClass(gc, nClasses=4)
+plot(gcc4$map)
