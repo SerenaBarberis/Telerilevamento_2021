@@ -1,8 +1,13 @@
 #R_code_vegetation_indices.r
 #calcolo dell'indice di vegetazione per osservare quanto è sana la vegetazione e quante biomassa è presente
 setwd('C:/Users/Sery/Desktop/lab')
+
+install.packages('rasterdiv')
 library(raster) #require(raster)
 library(RStoolbox)
+library(rasterdiv)
+library(rasterVis)
+
 
 defor1<-brick('defor1.jpg')
 defor2<-brick('defor2.jpg')
@@ -54,5 +59,10 @@ plot(vi2, col=cl)
 vi2 <- spectralIndices(defor2, green=3, red=2, nir=1)
 plot(vi2, col=cl)
 
+# worldwide NDVI
 
-
+plot(copNDVI)
+# Pixels with values 253, 254 and 255 (water) will be set as NA’s.
+copNDVI<-reclassify(copNDVI, cbind(253:255,NA)) #eliminiamo l'acqua
+plot(copNDVI)
+levelplot(copNDVI) #in colore più chiaro i valori più alti di biomassa
