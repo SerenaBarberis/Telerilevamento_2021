@@ -57,7 +57,11 @@ plot(sentpca$map) #la PC1 contiene la maggior parte delle informazioni, le altre
 sentpca
 summary(sentpca$model) #proporzione di variabilità spiegata da ogni singolo componente
 #la prima PC contiene il 67.36% dell'informazione(variabilità) originaria
+#calcolo focal pc1
+pc1 <- sentpca$map$PC1
+plot(pc1)
+pc1ds5 <- focal(pc1, w=matrix(1/25,nrow=5,ncol=5), fun=sd)
+clsd <- colorRampPalette(c('blue','green','magenta','pink','orange','brown','red','yellow'))(100)
+plot(pc1sd5, col=clsd)
 
-
-
-
+#34.40min
