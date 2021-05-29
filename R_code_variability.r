@@ -4,7 +4,7 @@ library(raster)
 library(RStoolbox)
 library(ggplot2)
 # install.packages("viridis")
-library(viridis)
+library(viridis) #colorare i plot di ggplot in modo automatico
 library(gridExtra)
 
 setwd('C:/Users/Sery/Desktop/lab')
@@ -60,8 +60,39 @@ summary(sentpca$model) #proporzione di variabilità spiegata da ogni singolo com
 #calcolo focal pc1
 pc1 <- sentpca$map$PC1
 plot(pc1)
-pc1ds5 <- focal(pc1, w=matrix(1/25,nrow=5,ncol=5), fun=sd)
+pc1sd5 <- focal(pc1, w=matrix(1/25,nrow=5,ncol=5), fun=sd)
 clsd <- colorRampPalette(c('blue','green','magenta','pink','orange','brown','red','yellow'))(100)
 plot(pc1sd5, col=clsd)
 
-#34.40min
+#come inserire un segmento di codice esterno dentro il nostro codice: funzione source
+source('source_test_lezione.r') #calcolo deviazione standard 7x7 dal codice nella cartella
+
+source('source_ggplot.r')
+
+#plottiamo tramite ggplot i dati
+#funzione ggplot: crea una nuova finestra in cui poi si inseriscono i dati
+#funzione geom_point: crea punti allinterno della finestra
+#geom_raster: inserisce i pixel nella finestra, formando una mappa
+#aes: definisce l'estetica dell'immagine, in questo caso x e y sono le coordinate geografiche e il riempimento (fill) è il layer del raster
+ggplot() + geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) + scale_fill_viridis()
+
+#pacchetto viridis: contiene 8 scale di colore automatiche (# The package contains eight color scales: “viridis”, the primary choice, and five alternatives with similar properties - “magma”, “plasma”, “inferno”, “civids”, “mako”, and “rocket” -, and a rainbow color map - “turbo”.)
+# https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html
+
+p0 <- ggplot() + geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) + scale_fill_viridis() +  ggtitle("Standerd deviationof PC1 by viridis scale")
+
+p1 <- ggplot() + geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) + scale_fill_viridis(option="magma") +  ggtitle("magma palette")
+
+p2 <- ggplot() + geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) + scale_fill_viridis(option="plasma") +  ggtitle("plasma palette")
+
+p3 <- ggplot() + geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) + scale_fill_viridis(option="inferno") +  ggtitle("inferno palette")
+
+p4 <- ggplot() + geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) + scale_fill_viridis(option="civids") +  ggtitle("cividis palette")
+
+p5 <- ggplot() + geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) + scale_fill_viridis(option="mako") +  ggtitle("mako palette")
+
+p6 <- ggplot() + geom_raster(pc1_devst, mapping = aes(x = x, y = y, fill = layer)) + scale_fill_viridis(option="rocket") + ggtitle("rocket palette")
+
+p7 <- ggplot() + geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) + scale_fill_viridis(option="turbo") + ggtitle("turbo palette")
+
+grid.arrange(p0, p1, p2, p3, p4, p5, p6, p7, nrow = 2) # this needs griExtra, tabella con tutte le scale di colori viridis (unisce le immagini di ggplot in una unica). nrow è il numero di righe
