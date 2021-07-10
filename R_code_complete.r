@@ -788,3 +788,5 @@ geom_line(aes(y=stratum1), color='yellow') +
 geom_line(aes(y=stratum2), color='red') +
 geom_line(aes(y=stratum3), color='green') +
 labs(x='band', y='reflectance')
+
+#------------------------------------------------------------------
