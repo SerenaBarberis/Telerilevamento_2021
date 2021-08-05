@@ -1,0 +1,81 @@
+#R_code_progetto
+
+#Imposto cartella di lavoro e richiamo i pacchetti
+setwd('C:/Users/Sery/Desktop/file progetto')
+library(raster)
+library(rasterVis)
+
+#produco un rasterstack con la funzione stack in modo da ottenere immagini composte da più bande
+list_1999<-list.files(pattern='1999_B')
+img_1999<-stack(list_1999)
+img_1999
+
+list_2004<-list.files(pattern='2004_B')
+img_2004<-stack(list_2004)
+img_2004
+
+list_2010<-list.files(pattern='2010_B')
+img_2010<-stack(list_2010)
+img_2010
+
+list_2014<-list.files(pattern='2014_B')
+img_2014<-stack(list_2014)
+img_2014
+
+list_2019<-list.files(pattern='2019_B')
+img_2019<-stack(list_2019)
+img_2019
+
+
+
+#Immagini con evidenziato l'infrarosso
+par(mfrow=c(2,3))
+plotRGB(img_1999, 4,3,2, stretch='lin',axes=TRUE, main='Luglio 1999')
+plotRGB(img_2004, 4,3,2, stretch='lin',axes=TRUE, main='Agosto 2004')
+plotRGB(img_2010, 4,3,2, stretch='lin',axes=TRUE, main='Luglio 2010')
+plotRGB(img_2014, 4,3,2, stretch='lin',axes=TRUE, main='Luglio 2014')
+plotRGB(img_2019, 4,3,2, stretch='lin',axes=TRUE, main='Luglio 2019')
+
+#evidenziata la neve
+par(mfrow=c(2,3))
+plotRGB(img_1999, 5,4,3, stretch='lin',axes=TRUE, main='Luglio 1999')
+plotRGB(img_2004, 5,4,3, stretch='lin',axes=TRUE,main='Agosto 2004')
+plotRGB(img_2010, 5,4,3, stretch='lin',axes=TRUE, main='Luglio 2010')
+plotRGB(img_2014, 5,4,3, stretch='lin',axes=TRUE,main='Luglio 2014')
+plotRGB(img_2019, 5,4,3, stretch='lin',axes=TRUE,main='Luglio 2019')
+
+#differenz ain termini di riflettanza tra 1999 e 2019
+dif<-img_1999 - img_2019
+
+par(mfrow=c(1,3))
+plotRGB(img_1999, 5,4,3, stretch='lin',axes=TRUE, main='Luglio 1999')
+plotRGB(img_2019, 5,4,3, stretch='lin',axes=TRUE, main='Luglio 2019')
+plotRGB(dif, 5,4,3, stretch='lin',axes=TRUE, main='differenza')
+
+#NDSI con banda 3 e 4
+NDSI_1999<-(img_1999[[3]]-img_1999[[4]])/(img_1999[[3]]+img_1999[[4]])
+NDSI_1999
+NDSI_2019<-(img_2019[[3]]-img_2019[[4]])/(img_2019[[3]]+img_2019[[4]])
+
+par(mfrow=c(1,2))
+plot(NDSI_1999,col=cl)
+plot(NDSI_2019,col=cl)
+
+#scioglimento
+list<-list.files(pattern='_qb')
+list
+[1] "1999_qb.tif" "2004_qb.tif" "2010_qb.tif" "2014_qb.tif" "2019_qb.tif"
+import<-lapply(list,raster)
+import
+
+melt<-stack(import)
+melt
+levelplot(melt)
+
+# plotRGB(melt, 2, 3, 4, stretch="Lin") immagini sovrapposte
+
+#aree con maggiore scioglimento
+ melt_amout<-melt$X1999_qb - melt$X2019_qb
+clb <- colorRampPalette(c("blue","white","red"))(100)
+plot(melt_amout, col=clb)
+levelplot(melt_amout, col.regions=clb) 
